@@ -8,7 +8,14 @@
 import SwiftUI
 import Combine
 
+@MainActor
 final class ChatViewModel: ObservableObject {
+
+    enum ChatAction: Equatable {
+        case didTapMicrophoneToast
+        case didTapPlusButton
+        case didSendMessage(String)
+    }
 
     enum ChatMode: String, CaseIterable, Identifiable {
         case talk = "Разговаривать"
@@ -21,6 +28,7 @@ final class ChatViewModel: ObservableObject {
     @Published var message: String = ""
     @Published var selectedTab: ChatMode = .talk
     @Published var isMicrophoneEnabled: Bool = true
+    @Published var requestedAction: ChatAction?
 
     // MARK: - Message Sending
     func sendMessage() {
@@ -31,4 +39,9 @@ final class ChatViewModel: ObservableObject {
         // TODO: Send message to backend or text-to-speech
         message = ""
     }
+
+    func didTapMicrophoneToast() {
+        requestedAction = .didTapMicrophoneToast
+    }
+    
 }
