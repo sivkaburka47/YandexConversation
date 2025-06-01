@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MicrophoneScreen: View {
     @State private var isFlipped = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
@@ -24,21 +25,7 @@ struct MicrophoneScreen: View {
                 Spacer()
 
                 Button(action: {
-                    withAnimation(.easeInOut(duration: 0.6)) {
-                        isFlipped.toggle()
-                    }
-                }) {
-                    Image("refreshIcon")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.black)
-                        .padding()
-                        .background(Color(.systemGray5))
-                        .clipShape(Circle())
-                }
-                .padding(.trailing, 16)
-
-                Button(action: {
-                    print("Закрыть")
+                    dismiss()
                 }) {
                     Image("krest")
                         .font(.system(size: 24, weight: .bold))
@@ -47,7 +34,7 @@ struct MicrophoneScreen: View {
                         .background(Color(.systemGray5))
                         .clipShape(Circle())
                 }
-                .padding(.trailing)
+                .padding(.trailing, 16)
             }
 
             Button(action: {
@@ -70,12 +57,21 @@ struct MicrophoneScreen: View {
         .animation(.easeInOut, value: isFlipped)
         .background(Color.white)
         .edgesIgnoringSafeArea(.bottom)
+        .overlay(
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.6)) {
+                    isFlipped.toggle()
+                }
+            }) {
+                Image("refreshIcon")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.black)
+                    .padding()
+                    .background(Color("knopProz"))
+                    .clipShape(Circle())
+            }
+            .padding(.trailing)
+            , alignment: .trailing
+        )
     }
 }
-
-
-// MARK: - Preview
-#Preview {
-    MicrophoneScreen()
-}
-
