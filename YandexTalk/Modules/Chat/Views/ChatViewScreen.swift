@@ -12,11 +12,16 @@ struct ChatViewScreen: View {
 
     @Binding var navigationPath: NavigationPath
     @Binding var showMicrophoneScreen: Bool
+    @Binding var microphoneText: String
+    @State private var isFlipped = false
 
-    init(navigationPath: Binding<NavigationPath>, showMicrophoneScreen: Binding<Bool>) {
+    init(navigationPath: Binding<NavigationPath>, 
+         showMicrophoneScreen: Binding<Bool>,
+         microphoneText: Binding<String>) {
         _navigationPath = navigationPath
         _viewModel = StateObject(wrappedValue: ChatViewModel())
         _showMicrophoneScreen = showMicrophoneScreen
+        _microphoneText = microphoneText
     }
 
     var body: some View {
@@ -27,28 +32,63 @@ struct ChatViewScreen: View {
                 Color(red: 230/255, green: 235/255, blue: 241/255)
                     .ignoresSafeArea(edges: .bottom)
 
-                VStack {
-                    microphoneStatus
-                    Spacer()
-                    messagePrompt
-                    Spacer()
+                if viewModel.messages.isEmpty {
+                    VStack {
+                        microphoneStatus
+                        Spacer()
+                        messagePrompt
+                        Spacer()
+                    }
+                } else {
+                    ChatMessagesView(messages: viewModel.messages, 
+                                   showMicrophoneScreen: $showMicrophoneScreen,
+                                   microphoneText: $microphoneText)
                 }
             }
             bottomInputBar
         }
-        .onChange(of: viewModel.requestedAction) { oldValue, newValue in
-                guard let action = newValue else { return }
-                switch action {
-                    case .didTapMicrophoneToast:
-                        showMicrophoneScreen = true
-                    case .didTapPlusButton:
-                        print("ChatViewScreen: ViewModel запросил действие для кнопки '+'.")
-                        navigationPath.append("phrases")
-                    case .didSendMessage(let message):
-                        print("ChatViewScreen: ViewModel запросил обработку отправки сообщения: \(message)")
-                }
-                viewModel.requestedAction = nil
+        .onChange(of: viewModel.requestedAction) { _, newValue in
+            guard let action = newValue else { return }
+
+            switch action {
+            case .didTapMicrophoneToast:
+                viewModel.message = """
+                Включен микрофон.
+                Говорите.
+                Постарайтесь говорить
+                разборчиво и не очень быстро
+                """
+                viewModel.sendMessage()
+                showMicrophoneScreen = true
+
+            case .didTapPlusButton:
+                navigationPath.append("phrases")
+
+            case .didSendMessage(let message):
+                viewModel.sendMessage()
+            }
+            viewModel.requestedAction = nil
         }
+        .rotationEffect(.degrees(isFlipped ? 180 : 0))
+        .animation(.easeInOut, value: isFlipped)
+        .overlay(
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.6)) {
+                    isFlipped.toggle()
+                    viewModel.toggleSender()
+                }
+            }) {
+                Image("refreshIcon")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.black)
+                    .padding()
+                    .background(Color("knopProz"))
+                    .clipShape(Circle())
+            }
+            .padding(.trailing)
+            , alignment: .trailing
+        )
+
     }
 }
 
@@ -60,7 +100,13 @@ extension ChatViewScreen {
             Image("chatIcon")
             Spacer()
             Button(action: {
-                print("MicroDark button tapped")
+                microphoneText = """
+                Включен микрофон.
+                Говорите.
+                Постарайтесь говорить
+                разборчиво и не очень быстро
+                """
+                showMicrophoneScreen = true
             }) {
                 Image("microDark")
                     .font(.system(size: 28))
@@ -168,4 +214,20 @@ extension ChatViewScreen {
         }
         .padding(.horizontal, 8)
     }
+
+    
 }
+
+//#Preview {
+//    let viewModel = ChatViewModel()
+//    viewModel.addUserMessage(userId: "me", text: "Hello, this is me!")
+//    viewModel.addUserMessage(userId: "other_1", text: "Hi, I'm Говорящий 1!")
+//    viewModel.addSystemMessage("System message")
+//
+//    return ChatViewScreen(
+//        navigationPath: .constant(NavigationPath()),
+//        showMicrophoneScreen: .constant(false),
+//        microphoneText: .constant("")
+//    )
+//    .environmentObject(viewModel) // Inject viewModel for preview
+//}

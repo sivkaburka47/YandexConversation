@@ -10,20 +10,18 @@ import SwiftUI
 struct MicrophoneScreen: View {
     @State private var isFlipped = false
     @Environment(\.dismiss) private var dismiss
-
+    let messageText: String
+    
     var body: some View {
         VStack {
             Spacer()
-            Text("Включен микрофон.\nГоворите.\nПостарайтесь говорить\nразборчиво и не очень быстро")
+            Text(messageText)
                 .font(.system(size: 48, weight: .heavy))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
-
             Spacer()
-
             HStack {
                 Spacer()
-
                 Button(action: {
                     dismiss()
                 }) {
@@ -38,16 +36,18 @@ struct MicrophoneScreen: View {
             }
 
             Button(action: {
-                print("Воспроизвести")
+                // TODO: Implement text-to-speech
+                print("Воспроизвести: \(messageText)")
             }) {
-                HStack {
-                    Image(systemName: "waveform")
+                HStack(spacing: 8) {
+                    Image("speechIcon")
                     Text("Воспроизвести")
-                        .fontWeight(.bold)
+                        .font(.system(size: 20, weight: .medium))
+                        .padding(.vertical, 21)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.yellow)
+                .background(Color("action"))
                 .foregroundColor(.black)
                 .cornerRadius(16)
             }
