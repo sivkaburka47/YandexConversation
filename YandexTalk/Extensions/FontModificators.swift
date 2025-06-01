@@ -19,13 +19,16 @@ extension Font {
 extension View {
     func onboardTitleStyle() -> some View {
         self.font(.onboardTitle)
+            .minimumScaleFactor(0.7)
     }
     
     func textBodyStyle() -> some View {
         self.font(.textBody)
+            .minimumScaleFactor(0.75)
     }
     
     func bodyMediumStyle() -> some View {
         self.font(.bodyMedium)
+            .minimumScaleFactor(0.7)
     }
 }
