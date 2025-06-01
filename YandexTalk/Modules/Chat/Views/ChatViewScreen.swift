@@ -11,10 +11,12 @@ struct ChatViewScreen: View {
     @StateObject private var viewModel = ChatViewModel()
 
     @Binding var navigationPath: NavigationPath
+    @Binding var showMicrophoneScreen: Bool
 
-    init(navigationPath: Binding<NavigationPath>) {
-            _navigationPath = navigationPath
-            _viewModel = StateObject(wrappedValue: ChatViewModel())
+    init(navigationPath: Binding<NavigationPath>, showMicrophoneScreen: Binding<Bool>) {
+        _navigationPath = navigationPath
+        _viewModel = StateObject(wrappedValue: ChatViewModel())
+        _showMicrophoneScreen = showMicrophoneScreen
     }
 
     var body: some View {
@@ -38,8 +40,7 @@ struct ChatViewScreen: View {
                 guard let action = newValue else { return }
                 switch action {
                     case .didTapMicrophoneToast:
-                        print("ChatViewScreen: ViewModel запросил навигацию на PhrasesScreenView. Добавляем 'microp' в path.")
-                        navigationPath.append("microphone")
+                        showMicrophoneScreen = true
                     case .didTapPlusButton:
                         print("ChatViewScreen: ViewModel запросил действие для кнопки '+'.")
                         navigationPath.append("phrases")

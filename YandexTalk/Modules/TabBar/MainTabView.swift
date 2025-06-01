@@ -10,11 +10,12 @@ import SwiftUI
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var navigationPath = NavigationPath()
+    @State private var showMicrophoneScreen = false
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
             TabView(selection: $selectedTab) {
-                ChatViewScreen(navigationPath: $navigationPath)
+                ChatViewScreen(navigationPath: $navigationPath, showMicrophoneScreen: $showMicrophoneScreen)
                     .padding(.bottom, 16)
                     .tabItem {
                         Image(selectedTab == 0 ? "leftTabIconActive" : "leftTabIconUnactive")
@@ -33,10 +34,8 @@ struct MainTabView: View {
                     }
                     .tag(2)
             }
-            .navigationDestination(for: String.self) { value in
-                if value == "microphone" {
-                    MicrophoneScreen()
-                }
+            .fullScreenCover(isPresented: $showMicrophoneScreen) {
+                MicrophoneScreen()
             }
         }
     }
