@@ -11,7 +11,7 @@ struct ChatViewScreen: View {
     @StateObject private var viewModel = ChatViewModel()
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             topBar
             segmentedPicker
             ZStack {
@@ -99,11 +99,11 @@ extension ChatViewScreen {
             .cornerRadius(12)
         }
         .padding(.horizontal)
-        .padding(.vertical)
+        .padding(.vertical, 8)
     }
 
     private var messagePrompt: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 18) {
             Spacer()
             Text("Печатайте сообщение, чтобы показать и озвучить собеседнику")
                 .multilineTextAlignment(.center)
@@ -111,31 +111,31 @@ extension ChatViewScreen {
                 .padding(.horizontal)
             Image("downStrelka")
         }
+        .padding(.horizontal, 64)
     }
 
     private var bottomInputBar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             Image("list")
-                .padding(.leading)
+                .padding(.leading, 12)
 
             TextField("Сообщение...", text: $viewModel.message)
-                .padding(.leading, 16)
-                .frame(height: 44)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .foregroundColor(Color("textminor"))
                 .background(Color("bgminor"))
-                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .clipShape(RoundedRectangle(cornerRadius: 48))
 
             Button(action: {
                 viewModel.sendMessage()
             }) {
                 Image("sendIcon")
-                    .foregroundColor(.black)
-                    .padding(10)
-                    .background(Color.yellow)
+                    .padding(12)
+                    .background(Color("action"))
                     .clipShape(Circle())
             }
         }
-        .padding(.horizontal)
-        .padding(.bottom, 10)
+        .padding(.horizontal, 8)
     }
 }
 
