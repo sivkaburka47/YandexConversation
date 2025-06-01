@@ -9,27 +9,35 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
+    @State private var navigationPath = NavigationPath()
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ChatViewScreen()
-                .padding(.bottom, 16)
-                .tabItem {
-                    Image(selectedTab == 0 ? "leftTabIconActive" : "leftTabIconUnactive")
-                }
-                .tag(0)
+        NavigationStack(path: $navigationPath) {
+            TabView(selection: $selectedTab) {
+                ChatViewScreen(navigationPath: $navigationPath)
+                    .padding(.bottom, 16)
+                    .tabItem {
+                        Image(selectedTab == 0 ? "leftTabIconActive" : "leftTabIconUnactive")
+                    }
+                    .tag(0)
 
-            PhrasesScreenView()
-                .tabItem {
-                    Image(selectedTab == 1 ? "secTabIconActive" : "secTabIconUnactive")
-                }
-                .tag(1)
+                PhrasesScreenView()
+                    .tabItem {
+                        Image(selectedTab == 1 ? "secTabIconActive" : "secTabIconUnactive")
+                    }
+                    .tag(1)
 
-            SettingsScreenView()
-                .tabItem {
-                    Image(selectedTab == 2 ? "rightTabIconActive" : "rightTabIconUnactive")
+                SettingsScreenView()
+                    .tabItem {
+                        Image(selectedTab == 2 ? "rightTabIconActive" : "rightTabIconUnactive")
+                    }
+                    .tag(2)
+            }
+            .navigationDestination(for: String.self) { value in
+                if value == "microphone" {
+                    MicrophoneScreen()
                 }
-                .tag(2)
+            }
         }
     }
 }

@@ -10,6 +10,13 @@ import SwiftUI
 struct ChatViewScreen: View {
     @StateObject private var viewModel = ChatViewModel()
 
+    @Binding var navigationPath: NavigationPath
+
+    init(navigationPath: Binding<NavigationPath>) {
+            _navigationPath = navigationPath
+            _viewModel = StateObject(wrappedValue: ChatViewModel())
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             topBar
@@ -26,6 +33,20 @@ struct ChatViewScreen: View {
                 }
             }
             bottomInputBar
+        }
+        .onChange(of: viewModel.requestedAction) { oldValue, newValue in
+                guard let action = newValue else { return }
+                switch action {
+                    case .didTapMicrophoneToast:
+                        print("ChatViewScreen: ViewModel запросил навигацию на PhrasesScreenView. Добавляем 'microp' в path.")
+                        navigationPath.append("microphone")
+                    case .didTapPlusButton:
+                        print("ChatViewScreen: ViewModel запросил действие для кнопки '+'.")
+                        navigationPath.append("phrases")
+                    case .didSendMessage(let message):
+                        print("ChatViewScreen: ViewModel запросил обработку отправки сообщения: \(message)")
+                }
+                viewModel.requestedAction = nil
         }
     }
 }
@@ -67,39 +88,43 @@ extension ChatViewScreen {
 
     private var microphoneStatus: some View {
         VStack {
-            HStack {
-                VStack {
-                    Image("micro")
-                        .frame(width: 21, height: 21)
-                    Spacer()
-                        .frame(height: 21)
-                }
-
-                VStack {
-                    HStack {
-                        Text("Микрофон включен ")
-                            .foregroundColor(.green)
-                            .font(.system(size: 20, weight: .medium))
+            Button(action: {
+                viewModel.didTapMicrophoneToast()
+            }, label: {
+                HStack {
+                    VStack {
+                        Image("micro")
+                            .frame(width: 21, height: 21)
                         Spacer()
+                            .frame(height: 21)
                     }
-                    HStack {
-                        Text("Сообщить собеседнику")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20, weight: .regular))
-                        Spacer()
-                    }
-                }
 
-                VStack {
-                    Image("backIcon")
-                        .frame(width: 21, height: 21)
-                    Spacer()
-                        .frame(height: 21)
+                    VStack {
+                        HStack {
+                            Text("Микрофон включен ")
+                                .foregroundColor(.green)
+                                .font(.system(size: 20, weight: .medium))
+                            Spacer()
+                        }
+                        HStack {
+                            Text("Сообщить собеседнику")
+                                .foregroundColor(.white)
+                                .font(.system(size: 20, weight: .regular))
+                            Spacer()
+                        }
+                    }
+
+                    VStack {
+                        Image("backIcon")
+                            .frame(width: 21, height: 21)
+                        Spacer()
+                            .frame(height: 21)
+                    }
                 }
-            }
-            .padding()
-            .background(Color("korich"))
-            .cornerRadius(12)
+                .padding()
+                .background(Color("korich"))
+                .cornerRadius(12)
+            })
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
@@ -142,9 +167,4 @@ extension ChatViewScreen {
         }
         .padding(.horizontal, 8)
     }
-}
-
-// MARK: - Preview
-#Preview {
-    ChatViewScreen()
 }

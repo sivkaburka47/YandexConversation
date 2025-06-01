@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct YandexTalkApp: App {
+    @AppStorage("hasCompletedOnboarding_v2") private var hasCompletedOnboarding: Bool = false
     var body: some Scene {
         WindowGroup {
-            OnboardingFlowView()
+            if hasCompletedOnboarding {
+                MainTabView()
+            } else {
+                OnboardingFlowView()
+            }
         }
     }
 }
