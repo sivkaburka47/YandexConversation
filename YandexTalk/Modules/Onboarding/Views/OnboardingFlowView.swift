@@ -16,7 +16,7 @@ struct OnboardingFlowView: View {
     
     var body: some View {
         if hasCompletedOnboarding {
-            ContentView()
+            MainTabView()
         } else {
             NavigationStack(path: $navigationPath) {
                 OnboardingFirstView(viewModel: viewModel)
