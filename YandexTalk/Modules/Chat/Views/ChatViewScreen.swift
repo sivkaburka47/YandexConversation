@@ -57,7 +57,8 @@ extension ChatViewScreen {
     private var segmentedPicker: some View {
         Picker("Режим", selection: $viewModel.selectedTab) {
             ForEach(ChatViewModel.ChatMode.allCases) { mode in
-                Text(mode.rawValue).tag(mode)
+                Text(mode.rawValue)
+                    .tag(mode)
             }
         }
         .pickerStyle(.segmented)
@@ -78,11 +79,13 @@ extension ChatViewScreen {
                     HStack {
                         Text("Микрофон включен ")
                             .foregroundColor(.green)
+                            .font(.system(size: 20, weight: .medium))
                         Spacer()
                     }
                     HStack {
                         Text("Сообщить собеседнику")
                             .foregroundColor(.white)
+                            .font(.system(size: 20, weight: .regular))
                         Spacer()
                     }
                 }
@@ -108,10 +111,12 @@ extension ChatViewScreen {
             Text("Печатайте сообщение, чтобы показать и озвучить собеседнику")
                 .multilineTextAlignment(.center)
                 .foregroundColor(Color("korich"))
+                .font(.system(size: 20, weight: .regular))
                 .padding(.horizontal)
             Image("downStrelka")
         }
         .padding(.horizontal, 64)
+        .padding(.vertical, 24)
     }
 
     private var bottomInputBar: some View {
@@ -122,7 +127,7 @@ extension ChatViewScreen {
             TextField("Сообщение...", text: $viewModel.message)
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
-                .foregroundColor(Color("textminor"))
+                .font(.system(size: 20, weight: .regular))
                 .background(Color("bgminor"))
                 .clipShape(RoundedRectangle(cornerRadius: 48))
 
