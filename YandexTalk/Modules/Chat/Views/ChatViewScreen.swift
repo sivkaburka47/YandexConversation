@@ -12,12 +12,16 @@ struct ChatViewScreen: View {
 
     @Binding var navigationPath: NavigationPath
     @Binding var showMicrophoneScreen: Bool
+    @Binding var microphoneText: String
     @State private var isFlipped = false
 
-    init(navigationPath: Binding<NavigationPath>, showMicrophoneScreen: Binding<Bool>) {
+    init(navigationPath: Binding<NavigationPath>, 
+         showMicrophoneScreen: Binding<Bool>,
+         microphoneText: Binding<String>) {
         _navigationPath = navigationPath
         _viewModel = StateObject(wrappedValue: ChatViewModel())
         _showMicrophoneScreen = showMicrophoneScreen
+        _microphoneText = microphoneText
     }
 
     var body: some View {
@@ -36,7 +40,9 @@ struct ChatViewScreen: View {
                         Spacer()
                     }
                 } else {
-                    ChatMessagesView(messages: viewModel.messages)
+                    ChatMessagesView(messages: viewModel.messages, 
+                                   showMicrophoneScreen: $showMicrophoneScreen,
+                                   microphoneText: $microphoneText)
                 }
             }
             bottomInputBar
@@ -52,8 +58,8 @@ struct ChatViewScreen: View {
                 Постарайтесь говорить
                 разборчиво и не очень быстро
                 """
-                showMicrophoneScreen = true
                 viewModel.sendMessage()
+                showMicrophoneScreen = true
 
             case .didTapPlusButton:
                 navigationPath.append("phrases")
@@ -94,7 +100,13 @@ extension ChatViewScreen {
             Image("chatIcon")
             Spacer()
             Button(action: {
-                print("MicroDark button tapped")
+                microphoneText = """
+                Включен микрофон.
+                Говорите.
+                Постарайтесь говорить
+                разборчиво и не очень быстро
+                """
+                showMicrophoneScreen = true
             }) {
                 Image("microDark")
                     .font(.system(size: 28))
@@ -214,7 +226,8 @@ extension ChatViewScreen {
 //
 //    return ChatViewScreen(
 //        navigationPath: .constant(NavigationPath()),
-//        showMicrophoneScreen: .constant(false)
+//        showMicrophoneScreen: .constant(false),
+//        microphoneText: .constant("")
 //    )
 //    .environmentObject(viewModel) // Inject viewModel for preview
 //}

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ChatMessagesView: View {
     let messages: [ChatMessage]
+    @Binding var showMicrophoneScreen: Bool
+    @Binding var microphoneText: String
 
     private var groupedMessages: [(date: Date, messages: [ChatMessage])] {
         let calendar = Calendar.current
@@ -56,7 +58,8 @@ struct ChatMessagesView: View {
             if message.sender == .me {
                 Spacer()
                 Button(action: {
-                    print("Speech button tapped")
+                    microphoneText = message.text
+                    showMicrophoneScreen = true
                 }) {
                     Image("speechIcon")
                         .font(.system(size: 28))

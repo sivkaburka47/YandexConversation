@@ -39,10 +39,7 @@ final class ChatViewModel: ObservableObject {
             case me = "me"
             case other = "other"
         }
-
-
-
-
+    
     // MARK: - Message Sending
     func sendMessage() {
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)

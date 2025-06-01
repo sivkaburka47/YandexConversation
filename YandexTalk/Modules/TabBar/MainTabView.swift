@@ -11,11 +11,16 @@ struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var navigationPath = NavigationPath()
     @State private var showMicrophoneScreen = false
+    @State private var microphoneText: String = ""
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
             TabView(selection: $selectedTab) {
-                ChatViewScreen(navigationPath: $navigationPath, showMicrophoneScreen: $showMicrophoneScreen)
+                ChatViewScreen(
+                    navigationPath: $navigationPath,
+                    showMicrophoneScreen: $showMicrophoneScreen,
+                    microphoneText: $microphoneText
+                )
                     .padding(.bottom, 16)
                     .tabItem {
                         Image(selectedTab == 0 ? "leftTabIconActive" : "leftTabIconUnactive")
@@ -35,7 +40,7 @@ struct MainTabView: View {
                     .tag(2)
             }
             .fullScreenCover(isPresented: $showMicrophoneScreen) {
-                MicrophoneScreen()
+                MicrophoneScreen(messageText: microphoneText)
             }
         }
     }
