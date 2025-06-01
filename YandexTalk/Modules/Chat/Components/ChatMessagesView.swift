@@ -55,6 +55,15 @@ struct ChatMessagesView: View {
         HStack {
             if message.sender == .me {
                 Spacer()
+                Button(action: {
+                    print("Speech button tapped")
+                }) {
+                    Image("speechIcon")
+                        .font(.system(size: 28))
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        .background(Circle().fill(Color("buttonSec")))
+                }
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -67,9 +76,12 @@ struct ChatMessagesView: View {
                 Text(message.text)
                     .font(.body)
 
-                Text(timeFormatted(message.timestamp))
-                    .font(.caption2)
-                    .foregroundColor(.gray)
+                HStack {
+                    Spacer()
+                    Text(timeFormatted(message.timestamp))
+                        .font(.caption2)
+                        .foregroundColor(.gray)
+                }
             }
             .frame(maxWidth: UIScreen.main.bounds.width * 0.65, alignment: .leading)
             .padding(12)
