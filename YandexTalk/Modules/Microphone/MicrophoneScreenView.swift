@@ -18,12 +18,9 @@ struct MicrophoneScreen: View {
                 .font(.system(size: 48, weight: .heavy))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
-
             Spacer()
-
             HStack {
                 Spacer()
-
                 Button(action: {
                     dismiss()
                 }) {
@@ -40,14 +37,15 @@ struct MicrophoneScreen: View {
             Button(action: {
                 print("Воспроизвести")
             }) {
-                HStack {
-                    Image(systemName: "waveform")
+                HStack(spacing: 8) {
+                    Image("speechIcon")
                     Text("Воспроизвести")
-                        .fontWeight(.bold)
+                        .font(.system(size: 20, weight: .medium))
+                        .padding(.vertical, 21)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.yellow)
+                .background(Color("action"))
                 .foregroundColor(.black)
                 .cornerRadius(16)
             }

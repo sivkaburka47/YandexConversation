@@ -29,15 +29,32 @@ final class ChatViewModel: ObservableObject {
     @Published var selectedTab: ChatMode = .talk
     @Published var isMicrophoneEnabled: Bool = true
     @Published var requestedAction: ChatAction?
+    @Published var messages: [ChatMessage] = []
+    @Published var currentSender: ChatMessage.Sender = .me
+
+    private var userNameMap: [String: String] = [:]
+    private var userCounter = 1
+
+    enum SenderType: String {
+            case me = "me"
+            case other = "other"
+        }
+
+
+
 
     // MARK: - Message Sending
     func sendMessage() {
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        print("Message sent: \(trimmed)")
-        // TODO: Send message to backend or text-to-speech
+        let newMessage = ChatMessage(sender: currentSender, text: trimmed, timestamp: Date())
+        messages.append(newMessage)
         message = ""
+    }
+
+    func toggleSender() {
+        currentSender = currentSender == .me ? .other : .me
     }
 
     func didTapMicrophoneToast() {
