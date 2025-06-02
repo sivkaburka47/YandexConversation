@@ -27,7 +27,10 @@ struct MainTabView: View {
                     }
                     .tag(0)
 
-                PhrasesScreenView()
+                PhrasesScreenView(
+                    showMicrophoneScreen: $showMicrophoneScreen,
+                    microphoneText: $microphoneText
+                )
                     .tabItem {
                         Image(selectedTab == 1 ? "secTabIconActive" : "secTabIconUnactive")
                     }

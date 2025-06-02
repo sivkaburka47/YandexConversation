@@ -9,6 +9,15 @@ import SwiftUI
 
 struct PhrasesScreenView: View {
     @StateObject private var viewModel = PhrasesViewModel()
+    @Binding var showMicrophoneScreen: Bool
+    @Binding var microphoneText: String
+
+    init(showMicrophoneScreen: Binding<Bool>,
+         microphoneText: Binding<String>) {
+        _viewModel = StateObject(wrappedValue: PhrasesViewModel())
+        _showMicrophoneScreen = showMicrophoneScreen
+        _microphoneText = microphoneText
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,11 +29,17 @@ struct PhrasesScreenView: View {
                                 .onTapGesture {
                                     viewModel.togglePin(for: phrase)
                                 }
-
-                            Text(phrase.text)
-                                .font(.body)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-
+                            
+                            Button(action: {
+                                microphoneText = phrase.text
+                                showMicrophoneScreen = true
+                            }) {
+                                Text(phrase.text)
+                                    .font(.body)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(PlainButtonStyle())
                             Spacer()
 
                             Button(action: {
