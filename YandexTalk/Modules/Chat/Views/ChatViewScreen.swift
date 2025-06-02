@@ -35,23 +35,8 @@ struct ChatViewScreen: View {
             ZStack {
                 Color(red: 230/255, green: 235/255, blue: 241/255)
                     .ignoresSafeArea(edges: .bottom)
-                
-                if viewModel.messages.isEmpty && viewModel.selectedTab == .talk {
-                    VStack {
-                        microphoneStatus
-                        Spacer()
-                        messagePrompt
-                        Spacer()
-                    }
-                } else {
-                    if viewModel.selectedTab == .talk {
-                        ChatMessagesView(messages: viewModel.messages,
-                                         showMicrophoneScreen: $showMicrophoneScreen,
-                                         microphoneText: $microphoneText)
-                    } else {
-                        ListenTextView(messages: viewModel.messages)
-                    }
-                }
+
+                mainContentView
             }
             if viewModel.selectedTab == .talk {
                 bottomInputBar
@@ -138,7 +123,43 @@ struct ChatViewScreen: View {
 
 // MARK: - View Components
 extension ChatViewScreen {
-    
+
+    @ViewBuilder
+    private var mainContentView: some View {
+        if viewModel.messages.isEmpty && viewModel.selectedTab == .talk {
+            emptyTalkView
+        } else {
+            if viewModel.selectedTab == .talk {
+                chatMessagesView
+            } else {
+                listenTextView
+            }
+        }
+    }
+
+    private var emptyTalkView: some View {
+        VStack {
+            microphoneStatus
+            Spacer()
+            messagePrompt
+            Spacer()
+        }
+    }
+
+    private var chatMessagesView: some View {
+        ChatMessagesView(
+            messages: viewModel.messages,
+            showMicrophoneScreen: $showMicrophoneScreen,
+            microphoneText: $microphoneText
+        )
+    }
+
+    private var listenTextView: some View {
+        ListenTextView(text: $viewModel.message)
+    }
+
+
+
     private var topBar: some View {
         HStack {
             Button(action: {
@@ -155,6 +176,11 @@ extension ChatViewScreen {
             Button(action: {
                 if viewModel.isMicrophoneEnabled {
                     viewModel.stopListening()
+                    if viewModel.selectedTab == .listen {
+                        Task {
+                            await viewModel.detectSpeakers()
+                        }
+                    }
                 } else {
                     viewModel.startListening()
                 }

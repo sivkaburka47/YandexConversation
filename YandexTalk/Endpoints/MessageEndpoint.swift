@@ -13,6 +13,7 @@ enum MessageEndpoint: APIEndpoint {
     case getAllChats
     case getMessages(chatId: UUID)
     case togglePin(messageId: UUID)
+    case detectSpeakers(text: String)
 
     var path: String {
         switch self {
@@ -24,6 +25,8 @@ enum MessageEndpoint: APIEndpoint {
             return "/Message/\(messageId.uuidString)/PinUnpin"
         case .getPinnedMessages:
             return "/Message/Pinned"
+        case .detectSpeakers:
+            return "/api/Ai/TextToText/DetectSpeakers"
         }
     }
 
@@ -33,11 +36,18 @@ enum MessageEndpoint: APIEndpoint {
             return .get
         case .togglePin:
             return .patch
+        case .detectSpeakers:
+            return .post
         }
     }
 
     var parameters: Parameters? {
-        return nil
+        switch self {
+        case .detectSpeakers(let text):
+            return ["text": text]
+        default:
+            return nil
+        }
     }
 
     var headers: HTTPHeaders? {

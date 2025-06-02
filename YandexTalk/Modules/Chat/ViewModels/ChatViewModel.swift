@@ -178,6 +178,23 @@ final class ChatViewModel: ObservableObject {
     
     // MARK: - API Methods
     
+    func detectSpeakers() async {
+        guard !message.isEmpty else { return }
+        
+        do {
+            let response: String = try await httpClient.sendRequest(
+                endpoint: MessageEndpoint.detectSpeakers(text: message),
+                requestBody: nil as Never?
+            )
+            
+            await MainActor.run {
+                self.message = response
+            }
+        } catch {
+            print("Ошибка при определении говорящих: \(error)")
+        }
+    }
+    
     func fetchChats() async {
         do {
             let chats: [CreateChatResponse] = try await httpClient.sendRequest(endpoint: GetChatsEndpoint() as APIEndpoint, requestBody: nil as Never?)
