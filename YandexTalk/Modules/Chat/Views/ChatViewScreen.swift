@@ -16,6 +16,7 @@ struct ChatViewScreen: View {
     @State private var isFlipped = false
     @State private var isAnimatingMicrophone: Bool = false
     @State private var showPhrasesTable = false
+    @State private var isShowingChatsList = false
 
 
     init(navigationPath: Binding<NavigationPath>,
@@ -117,6 +118,9 @@ struct ChatViewScreen: View {
                 viewModel.startListening()
             }
         }
+        .sheet(isPresented: $isShowingChatsList) {
+            ChatsListView(viewModel: viewModel)
+        }
     }
 }
 
@@ -126,7 +130,10 @@ extension ChatViewScreen {
     private var topBar: some View {
         HStack {
             Button(action: {
-
+                Task {
+                    await viewModel.fetchChats()
+                    isShowingChatsList = true
+                }
             }) {
                 Image("chatIcon")
             }
@@ -144,7 +151,12 @@ extension ChatViewScreen {
                     .scaleEffect(isAnimatingMicrophone ? 1.1 : 1.0)
             }
             Spacer()
-            Image("plusBtn")
+            Button(action: {
+                viewModel.clearChatHistory()
+                Task { await viewModel.createNewChat() }
+            }) {
+                Image("plusBtn")
+            }
         }
         .padding(.horizontal)
         .padding(.top, 12)
@@ -246,5 +258,36 @@ extension ChatViewScreen {
             }
         }
         .padding(.horizontal, 8)
+    }
+}
+
+
+struct ChatsListView: View {
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: ChatViewModel
+
+    var body: some View {
+        NavigationView {
+            List(viewModel.chats, id: \.id) { chat in
+                VStack(alignment: .leading) {
+                    Text("Chat ID: \(chat.id)")
+                        .font(.headline)
+                    Text("Created: \(chat.createTime)")
+                        .font(.subheadline)
+                    if let lastMessage = chat.lastMessage {
+                        Text("Last Message: \(lastMessage)")
+                            .font(.caption)
+                    }
+                }
+            }
+            .navigationTitle("Чаты")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Закрыть") {
+                        dismiss()
+                    }
+                }
+            }
+        }
     }
 }
