@@ -92,6 +92,16 @@ struct ChatMessagesView: View {
             .cornerRadius(12)
 
             if message.sender == .other {
+                Button(action: {
+                    microphoneText = message.text
+                    showMicrophoneScreen = true
+                }) {
+                    Image("speechIcon")
+                        .font(.system(size: 28))
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                        .background(Circle().fill(Color("buttonSec")))
+                }
                 Spacer()
             }
         }
