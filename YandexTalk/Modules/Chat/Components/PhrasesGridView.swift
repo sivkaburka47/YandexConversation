@@ -26,6 +26,8 @@ struct PhrasesGridView: View {
                         .onTapGesture {
                             onPhraseTap(message.text)
                         }
+                        .accessibilityLabel(message.text)
+                        .accessibilityAddTraits(.isButton)
                 }
             }
             .padding()

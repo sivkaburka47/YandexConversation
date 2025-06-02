@@ -67,6 +67,8 @@ struct ChatMessagesView: View {
                         .clipShape(Circle())
                         .background(Circle().fill(Color("buttonSec")))
                 }
+                .accessibilityLabel("Воспроизвести сообщение")
+                .accessibilityAddTraits(.isButton)
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -102,10 +104,14 @@ struct ChatMessagesView: View {
                         .clipShape(Circle())
                         .background(Circle().fill(Color("buttonSec")))
                 }
+                .accessibilityLabel("Воспроизвести сообщение")
+                .accessibilityAddTraits(.isButton)
                 Spacer()
             }
         }
         .padding(.horizontal)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Сообщение от \(message.sender.displayName), текст: \(message.text), отправлено в \(timeFormatted(message.timestamp))")
     }
 
     private func bubbleColor(for sender: ChatMessage.Sender) -> Color {

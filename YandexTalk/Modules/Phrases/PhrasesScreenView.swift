@@ -31,6 +31,8 @@ struct PhrasesScreenView: View {
                                 .onTapGesture {
                                     viewModel.togglePin(for: phrase)
                                 }
+                                .accessibilityLabel(phrase.isPinned ? "Открепить фразу: \(phrase.text)" : "Закрепить фразу: \(phrase.text)")
+                                .accessibilityAddTraits(.isButton)
 
                             Button(action: {
                                 microphoneText = phrase.text
@@ -42,6 +44,7 @@ struct PhrasesScreenView: View {
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .accessibilityLabel("Воспроизвести фразу: \(phrase.text)")
                             Spacer()
 
                             Button(action: {
@@ -51,6 +54,7 @@ struct PhrasesScreenView: View {
                                     .rotationEffect(.degrees(90))
                                     .padding(.trailing, 4)
                             }
+                            .accessibilityLabel("Дополнительные действия для фразы: \(phrase.text)")
                         }
                         .padding(.vertical, 12)
                         .padding(.horizontal)
@@ -74,6 +78,7 @@ struct PhrasesScreenView: View {
                 .cornerRadius(16)
                 .padding()
             }
+            .accessibilityLabel("Добавить новую фразу")
         }
         .sheet(isPresented: $isShowingAddPhraseSheet) {
             NavigationView {
@@ -84,6 +89,7 @@ struct PhrasesScreenView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(12)
                         .padding()
+                        .accessibilityLabel("Введите новую фразу")
 
                     Spacer()
                 }
@@ -95,6 +101,7 @@ struct PhrasesScreenView: View {
                             isShowingAddPhraseSheet = false
                             newPhraseText = ""
                         }
+                        .accessibilityLabel("Отмена добавления фразы")
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Добавить") {
@@ -105,6 +112,7 @@ struct PhrasesScreenView: View {
                             newPhraseText = ""
                         }
                         .disabled(newPhraseText.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .accessibilityLabel("Добавить фразу")
                     }
                 }
             }

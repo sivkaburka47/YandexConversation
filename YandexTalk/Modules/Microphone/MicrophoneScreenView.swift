@@ -22,6 +22,7 @@ struct MicrophoneScreen: View {
                 .font(.system(size: 48, weight: .heavy))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
+                .accessibilityLabel("Распознанный текст: \(messageText)")
             Spacer()
             HStack {
                 Spacer()
@@ -35,6 +36,7 @@ struct MicrophoneScreen: View {
                         .padding()
                         .background(Color(.systemGray5))
                         .clipShape(Circle())
+                        .accessibilityLabel("Закрыть")
                 }
                 .padding(.trailing, 16)
             }
@@ -53,6 +55,7 @@ struct MicrophoneScreen: View {
                 .background(Color("action"))
                 .foregroundColor(.black)
                 .cornerRadius(16)
+                .accessibilityLabel("Воспроизвести распознанный текст")
             }
             .padding()
         }
@@ -72,6 +75,7 @@ struct MicrophoneScreen: View {
                     .padding()
                     .background(Color("knopProz"))
                     .clipShape(Circle())
+                    .accessibilityLabel("Поменять отправителя")
             }
             .padding(.trailing)
             , alignment: .trailing

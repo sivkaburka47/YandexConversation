@@ -15,6 +15,7 @@ struct OnboardingThirdView: View {
         
         VStack(spacing: 56) {
             Image("LogoThree")
+                .accessibilityLabel("Иллюстрация функции быстрых фраз")
             
             VStack(spacing: 16) {
                 Text("Быстрые фразы под рукой")

@@ -15,6 +15,7 @@ struct OnboardingSecondView: View {
         
         VStack(spacing: 56) {
             Image("LogoSec")
+                .accessibilityLabel("Иллюстрация функции чтения речи")
             
             VStack(spacing: 16) {
                 Text("Читайте речь вокруг вас")

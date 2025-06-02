@@ -143,6 +143,7 @@ extension ChatViewScreen {
             }) {
                 Image("chatIcon")
             }
+            .accessibilityLabel("Список чатов")
 
             Spacer()
             Button(action: {
@@ -156,6 +157,8 @@ extension ChatViewScreen {
                     .background(Circle().fill(Color("salatoviy")))
                     .scaleEffect(isAnimatingMicrophone ? 1.1 : 1.0)
             }
+            .accessibilityLabel(viewModel.isMicrophoneEnabled ? "Микрофон включен" : "Микрофон выключен")
+
             Spacer()
             Button(action: {
                 viewModel.clearChatHistory()
@@ -166,6 +169,7 @@ extension ChatViewScreen {
         }
         .padding(.horizontal)
         .padding(.top, 12)
+        .accessibilityLabel("Создать новый чат")
     }
     
     private var segmentedPicker: some View {
@@ -177,6 +181,7 @@ extension ChatViewScreen {
         }
         .pickerStyle(.segmented)
         .padding(.horizontal)
+        .accessibilityLabel("Выберите режим чата")
     }
     
     private var microphoneStatus: some View {
@@ -218,6 +223,7 @@ extension ChatViewScreen {
                 .background(Color("korich"))
                 .cornerRadius(12)
             })
+            .accessibilityLabel("Сообщить собеседнику, что микрофон включен")
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
@@ -235,6 +241,8 @@ extension ChatViewScreen {
         }
         .padding(.horizontal, 64)
         .padding(.vertical, 24)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Поле для ввода сообщения")
     }
     
     private var bottomInputBar: some View {
@@ -245,9 +253,11 @@ extension ChatViewScreen {
                 Image("list")
                     .padding(.leading, 12)
             }
+            .accessibilityLabel("Показать быстрые фразы")
 
             
             TextField("Сообщение...", text: $viewModel.message)
+                .accessibilityLabel("Поле ввода сообщения")
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
                 .font(.system(size: 20, weight: .regular))
@@ -285,6 +295,8 @@ struct ChatsListView: View {
                             .font(.caption)
                     }
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Чат с ID \(chat.id), создан \(chat.createTime)\(chat.lastMessage != nil ? ", последнее сообщение: \(chat.lastMessage!)" : "")")
             }
             .navigationTitle("Чаты")
             .toolbar {
@@ -292,6 +304,7 @@ struct ChatsListView: View {
                     Button("Закрыть") {
                         dismiss()
                     }
+                    .accessibilityLabel("Закрыть список чатов")
                 }
             }
         }

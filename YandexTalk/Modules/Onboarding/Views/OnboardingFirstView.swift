@@ -15,6 +15,7 @@ struct OnboardingFirstView: View {
         
         VStack(spacing: 56) {
             Image("logoFirst")
+                .accessibilityLabel("Логотип приложения YandexTalk")
             
             VStack(spacing: 16) {
                 Text("Разговаривайте с помощью текста")
