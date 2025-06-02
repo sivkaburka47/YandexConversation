@@ -15,7 +15,9 @@ struct ChatViewScreen: View {
     @Binding var microphoneText: String
     @State private var isFlipped = false
     @State private var isAnimatingMicrophone: Bool = false
-    
+    @State private var showPhrasesTable = false
+
+
     init(navigationPath: Binding<NavigationPath>,
          showMicrophoneScreen: Binding<Bool>,
          microphoneText: Binding<String>) {
@@ -47,6 +49,9 @@ struct ChatViewScreen: View {
                 }
             }
             bottomInputBar
+            if showPhrasesTable {
+                MockPhrasesGridView()
+            }
         }
         .onChange(of: viewModel.requestedAction) { _, newValue in
             guard let action = newValue else { return }
@@ -120,7 +125,12 @@ extension ChatViewScreen {
     
     private var topBar: some View {
         HStack {
-            Image("chatIcon")
+            Button(action: {
+
+            }) {
+                Image("chatIcon")
+            }
+
             Spacer()
             Button(action: {
                 
@@ -211,8 +221,13 @@ extension ChatViewScreen {
     
     private var bottomInputBar: some View {
         HStack(spacing: 8) {
-            Image("list")
-                .padding(.leading, 12)
+            Button(action: {
+                showPhrasesTable.toggle()
+            }) {
+                Image("list")
+                    .padding(.leading, 12)
+            }
+
             
             TextField("Сообщение...", text: $viewModel.message)
                 .padding(.vertical, 12)
