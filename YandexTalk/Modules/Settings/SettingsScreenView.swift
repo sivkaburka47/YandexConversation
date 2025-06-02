@@ -9,6 +9,13 @@ import SwiftUI
 
 struct SettingsScreenView: View {
     var body: some View {
-        Text("Экран настройки")
+        VStack {
+            Image("yandexLogo")
+            Text("В разработке...")
+                .multilineTextAlignment(.center)
+                .foregroundColor(Color("korich"))
+                .font(.system(size: 32, weight: .medium))
+                .padding(.horizontal)
+        }
     }
 }
