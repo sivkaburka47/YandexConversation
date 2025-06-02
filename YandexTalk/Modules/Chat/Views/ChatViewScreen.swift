@@ -36,7 +36,7 @@ struct ChatViewScreen: View {
                 Color(red: 230/255, green: 235/255, blue: 241/255)
                     .ignoresSafeArea(edges: .bottom)
                 
-                if viewModel.messages.isEmpty {
+                if viewModel.messages.isEmpty && viewModel.selectedTab == .talk {
                     VStack {
                         microphoneStatus
                         Spacer()
@@ -44,12 +44,18 @@ struct ChatViewScreen: View {
                         Spacer()
                     }
                 } else {
-                    ChatMessagesView(messages: viewModel.messages,
-                                     showMicrophoneScreen: $showMicrophoneScreen,
-                                     microphoneText: $microphoneText)
+                    if viewModel.selectedTab == .talk {
+                        ChatMessagesView(messages: viewModel.messages,
+                                         showMicrophoneScreen: $showMicrophoneScreen,
+                                         microphoneText: $microphoneText)
+                    } else {
+                        ListenTextView(messages: viewModel.messages)
+                    }
                 }
             }
-            bottomInputBar
+            if viewModel.selectedTab == .talk {
+                bottomInputBar
+            }
             if showPhrasesTable {
                 PhrasesGridView(
                     pinnedMessages: viewModel.pinnedMessages,
@@ -147,14 +153,19 @@ extension ChatViewScreen {
 
             Spacer()
             Button(action: {
-                
+                if viewModel.isMicrophoneEnabled {
+                    viewModel.stopListening()
+                } else {
+                    viewModel.startListening()
+                }
             }) {
                 Image("microDark")
+                    .renderingMode(.template)
                     .font(.system(size: 28))
-                    .foregroundColor(.green)
+                    .foregroundColor(viewModel.isMicrophoneEnabled ? .green : .red)
                     .frame(width: 48, height: 48)
                     .clipShape(Circle())
-                    .background(Circle().fill(Color("salatoviy")))
+                    .background(Circle().fill(viewModel.isMicrophoneEnabled ? Color("salatoviy") : Color.red.opacity(0.5)))
                     .scaleEffect(isAnimatingMicrophone ? 1.1 : 1.0)
             }
             .accessibilityLabel(viewModel.isMicrophoneEnabled ? "Микрофон включен" : "Микрофон выключен")
