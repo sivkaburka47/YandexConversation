@@ -11,6 +11,8 @@ struct PhrasesScreenView: View {
     @StateObject private var viewModel = PhrasesViewModel()
     @Binding var showMicrophoneScreen: Bool
     @Binding var microphoneText: String
+    @State private var isShowingAddPhraseSheet = false
+    @State private var newPhraseText = ""
 
     init(showMicrophoneScreen: Binding<Bool>,
          microphoneText: Binding<String>) {
@@ -29,7 +31,7 @@ struct PhrasesScreenView: View {
                                 .onTapGesture {
                                     viewModel.togglePin(for: phrase)
                                 }
-                            
+
                             Button(action: {
                                 microphoneText = phrase.text
                                 showMicrophoneScreen = true
@@ -58,7 +60,7 @@ struct PhrasesScreenView: View {
             }
 
             Button(action: {
-                // добавить фразы
+                isShowingAddPhraseSheet = true
             }) {
                 HStack {
                     Image(systemName: "plus.circle.fill")
@@ -71,6 +73,40 @@ struct PhrasesScreenView: View {
                 .foregroundColor(.black)
                 .cornerRadius(16)
                 .padding()
+            }
+        }
+        .sheet(isPresented: $isShowingAddPhraseSheet) {
+            NavigationView {
+                VStack {
+                    TextEditor(text: $newPhraseText)
+                        .padding()
+                        .frame(minHeight: 200)
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                        .padding()
+
+                    Spacer()
+                }
+                .navigationTitle("Новая фраза")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Отмена") {
+                            isShowingAddPhraseSheet = false
+                            newPhraseText = ""
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Добавить") {
+                            if !newPhraseText.trimmingCharacters(in: .whitespaces).isEmpty {
+                                viewModel.addPhrase(text: newPhraseText)
+                            }
+                            isShowingAddPhraseSheet = false
+                            newPhraseText = ""
+                        }
+                        .disabled(newPhraseText.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                }
             }
         }
     }

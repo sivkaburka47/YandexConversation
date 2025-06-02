@@ -46,4 +46,16 @@ class PhrasesViewModel: ObservableObject {
             }
         }
     }
+
+    func addPhrase(text: String) {
+        let newPhrase = Phrase(
+            id: UUID().uuidString,
+            text: text,
+            timestamp: Date(),
+            isPinned: false
+        )
+
+        phrases.insert(newPhrase, at: 0)
+        sortPhrases()
+    }
 }
