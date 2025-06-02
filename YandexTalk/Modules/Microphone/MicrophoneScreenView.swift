@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct MicrophoneScreen: View {
     @State private var isFlipped = false
     @Environment(\.dismiss) private var dismiss
     let messageText: String
+    
+    private let speechSynthesizer = AVSpeechSynthesizer()
     
     var body: some View {
         VStack {
@@ -23,6 +26,7 @@ struct MicrophoneScreen: View {
             HStack {
                 Spacer()
                 Button(action: {
+                    speechSynthesizer.stopSpeaking(at: .immediate)
                     dismiss()
                 }) {
                     Image("krest")
@@ -36,8 +40,7 @@ struct MicrophoneScreen: View {
             }
 
             Button(action: {
-                // TODO: Implement text-to-speech
-                print("Воспроизвести: \(messageText)")
+                speakText(messageText)
             }) {
                 HStack(spacing: 8) {
                     Image("speechIcon")
@@ -73,5 +76,19 @@ struct MicrophoneScreen: View {
             .padding(.trailing)
             , alignment: .trailing
         )
+        .onDisappear {
+            speechSynthesizer.stopSpeaking(at: .immediate)
+        }
+    }
+    
+    private func speakText(_ text: String) {
+        speechSynthesizer.stopSpeaking(at: .immediate)
+        
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ru-RU")
+        utterance.rate = 0.5
+        utterance.pitchMultiplier = 1.0
+        
+        speechSynthesizer.speak(utterance)
     }
 }

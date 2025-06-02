@@ -94,6 +94,9 @@ struct ChatViewScreen: View {
         .onAppear {
             viewModel.startListening()
         }
+        .onDisappear {
+            viewModel.stopListening()
+        }
         .onChange(of: viewModel.isMicrophoneEnabled) { _, isRecording in
             withAnimation(Animation.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
                 isAnimatingMicrophone = isRecording
