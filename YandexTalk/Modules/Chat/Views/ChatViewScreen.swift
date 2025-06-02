@@ -51,7 +51,13 @@ struct ChatViewScreen: View {
             }
             bottomInputBar
             if showPhrasesTable {
-                MockPhrasesGridView()
+                PhrasesGridView(
+                    pinnedMessages: viewModel.pinnedMessages,
+                    onPhraseTap: { tappedText in
+                        viewModel.insertPinnedMessageText(tappedText)
+                        showPhrasesTable = false
+                    }
+                )
             }
         }
         .onChange(of: viewModel.requestedAction) { _, newValue in
