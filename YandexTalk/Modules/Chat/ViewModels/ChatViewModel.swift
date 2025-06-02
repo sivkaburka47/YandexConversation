@@ -34,6 +34,9 @@ final class ChatViewModel: ObservableObject {
     
     private var isHandlingMessageSend = false
 
+    @Published var pinnedMessages: [PinnedMessage] = []
+    
+
     private var userNameMap: [String: String] = [:]
     private var userCounter = 1
 
@@ -43,10 +46,12 @@ final class ChatViewModel: ObservableObject {
         }
     
     private let speechRecognizer: SpeechRecognizerManager
-    
-    init(speechRecognizer: SpeechRecognizerManager = SpeechRecognizerManager()) {
+    private let httpClient: HTTPClient
+
+    init(speechRecognizer: SpeechRecognizerManager = SpeechRecognizerManager(), httpClient: HTTPClient = AlamofireHTTPClient()) {
         self.speechRecognizer = speechRecognizer
-        
+        self.httpClient = httpClient
+
         speechRecognizer.requestAuthorization { granted in
             if !granted {
                 print("Разрешения на микрофон или распознавание речи не предоставлены при запуске.")
@@ -74,8 +79,29 @@ final class ChatViewModel: ObservableObject {
                  self?.isMicrophoneEnabled = false
             }
         }
+
+        Task {
+            await fetchPinnedMessages()
+        }
     }
-    
+
+    func fetchPinnedMessages() async {
+        do {
+            let pinnedMessages: [PinnedMessage] = try await httpClient.sendRequest(
+                endpoint: MessageEndpoint.getPinnedMessages,
+                requestBody: EmptyRequest?.none
+            )
+            self.pinnedMessages = pinnedMessages
+        } catch {
+            print("Ошибка при получении pinned messages: \(error)")
+        }
+    }
+
+    func insertPinnedMessageText(_ text: String) {
+        message = text
+    }
+
+
     // MARK: - Message Sending
     func sendMessage() {
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -102,6 +128,7 @@ final class ChatViewModel: ObservableObject {
 
     func didTapMicrophoneToast() {
         requestedAction = .didTapMicrophoneToast
+
     }
     
     func startListening() {

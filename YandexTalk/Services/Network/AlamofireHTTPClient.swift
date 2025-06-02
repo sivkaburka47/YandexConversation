@@ -10,8 +10,8 @@ import Foundation
 
 final class AlamofireHTTPClient: HTTPClient {
     
-    private let baseURL = "localhost:8080/api"
-    
+    private let baseURL = "http://localhost:5036/api"
+
     func sendRequest<T: Decodable, U: Encodable>(endpoint: APIEndpoint, requestBody: U? = nil) async throws -> T {
         let url = baseURL + endpoint.path
         let method = endpoint.method
