@@ -26,12 +26,6 @@ struct CreateChatEndpoint: APIEndpoint {
     let headers: HTTPHeaders? = nil
 }
 
-struct Chat: Codable {
-    let id: String
-    let createTime: String
-    let lastMessage: String?
-}
-
 struct CreateChatResponse: Codable {
     let id: String
     let createTime: String
