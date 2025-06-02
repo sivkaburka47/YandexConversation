@@ -104,18 +104,7 @@ struct MicrophoneScreen: View {
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
         
-        speechSynthesizer.delegate = self
         
         speechSynthesizer.speak(utterance)
-    }
-}
-
-extension MicrophoneScreen: AVSpeechSynthesizerDelegate {
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        try? AVAudioSession.sharedInstance().setActive(false)
-    }
-    
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        try? AVAudioSession.sharedInstance().setActive(false)
     }
 }
