@@ -84,11 +84,38 @@ struct MicrophoneScreen: View {
     private func speakText(_ text: String) {
         speechSynthesizer.stopSpeaking(at: .immediate)
         
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Ошибка настройки аудио сессии: \(error)")
+            return
+        }
+        
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "ru-RU")
+        
+        if let voice = AVSpeechSynthesisVoice(language: "ru-RU") {
+            utterance.voice = voice
+        } else {
+            utterance.voice = AVSpeechSynthesisVoice()
+        }
+        
         utterance.rate = 0.5
         utterance.pitchMultiplier = 1.0
+        utterance.volume = 1.0
+        
+        speechSynthesizer.delegate = self
         
         speechSynthesizer.speak(utterance)
+    }
+}
+
+extension MicrophoneScreen: AVSpeechSynthesizerDelegate {
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        try? AVAudioSession.sharedInstance().setActive(false)
+    }
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        try? AVAudioSession.sharedInstance().setActive(false)
     }
 }

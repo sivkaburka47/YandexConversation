@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSSpeechSynthesisUsageDescription</key>
+	<string>Приложению требуется доступ к синтезу речи для озвучивания текста</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Приложению требуется доступ к распознаванию речи для преобразования голоса в текст</string>
 	<key>NSMicrophoneUsageDescription</key>
