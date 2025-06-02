@@ -1,3 +1,11 @@
+//
+//  SpeechRecognizerManager.swift
+//  YandexTalk
+//
+//  Created by Богдан Тарченко on 02.06.2025.
+//
+
+
 import Speech
 import AVFoundation
 
@@ -19,8 +27,31 @@ class SpeechRecognizerManager: NSObject, SFSpeechRecognizerDelegate {
         speechRecognizer?.delegate = self
     }
     
+    func requestAuthorization(completion: @escaping (Bool) -> Void) {
+        SFSpeechRecognizer.requestAuthorization { authStatus in
+            OperationQueue.main.addOperation {
+                var isSpeechRecognizerAuthorized = false
+                switch authStatus {
+                case .authorized:
+                    isSpeechRecognizerAuthorized = true
+                case .denied:
+                    isSpeechRecognizerAuthorized = false
+                case .restricted:
+                    isSpeechRecognizerAuthorized = false
+                case .notDetermined:
+                    isSpeechRecognizerAuthorized = false
+                @unknown default:
+                    isSpeechRecognizerAuthorized = false
+                }
+
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    completion(isSpeechRecognizerAuthorized && granted)
+                }
+            }
+        }
+    }
+    
     func startRecording() throws {
-        
         if let recognitionTask = recognitionTask {
             recognitionTask.cancel()
             self.recognitionTask = nil
