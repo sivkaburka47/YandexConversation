@@ -105,6 +105,13 @@ struct ChatViewScreen: View {
                 isAnimatingMicrophone = false
             }
         }
+        .onChange(of: showMicrophoneScreen) { _, isShowingMicrophoneScreen in
+            if isShowingMicrophoneScreen {
+                viewModel.stopListening()
+            } else {
+                viewModel.startListening()
+            }
+        }
     }
 }
 
