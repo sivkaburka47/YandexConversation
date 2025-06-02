@@ -13,3 +13,13 @@ struct Phrase: Identifiable, Equatable {
     var timestamp: Date
     var isPinned: Bool
 }
+
+extension Phrase {
+    init(from pinnedMessage: PinnedMessage) {
+        self.id = pinnedMessage.id.uuidString
+        self.text = pinnedMessage.text
+        self.timestamp = Date()
+        self.isPinned = true
+    }
+}
+
